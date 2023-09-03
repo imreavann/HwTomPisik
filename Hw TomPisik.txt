@@ -1,0 +1,224 @@
+using System;
+
+class Animal
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public string Gender { get; set; }
+    public int Energy { get; set; }
+    public double Price { get; set; }
+    public int MealCount { get; set; }
+
+    public Animal(string ad, int yas, string cins, double qiymet)
+    {
+        Name = ad;
+        Age = yas;
+        Gender = cins;
+        Energy = 100;
+        Price = qiymet;
+        MealCount = 0;
+    }
+
+    public void Eat()
+    {
+        Energy += 10;
+        MealCount++;
+        Console.WriteLine($"{Name} yemey yedi ve enerjisi artdi");
+    }
+
+    public void Sleep()
+    {
+        Energy = 100;
+        Console.WriteLine($"{Name} yatdi ve enerjisi fullandi");
+    }
+
+    public void Play()
+    {
+        if (Energy > 0)
+        {
+            Energy -= 20;
+            Console.WriteLine($"{Name} oynadi ve enerjisi azaldi");
+        }
+        else
+        {
+            Console.WriteLine($"{Name} enerjisi tukenib oynaya bilmez");
+        }
+    }
+}
+
+class PetShop
+{
+    public Animal[] Cats;
+    public Animal[] Dogs;
+    public Animal[] Birds;
+    public Animal[] Fishes;
+    int catCount;
+    int dogCount;
+    int birdCount;
+    int fishCount;
+
+    public PetShop(int maxCapacity)
+    {
+        Cats = new Animal[maxCapacity];
+        Dogs = new Animal[maxCapacity];
+        Birds = new Animal[maxCapacity];
+        Fishes = new Animal[maxCapacity];
+        catCount = 0;
+        dogCount = 0;
+        birdCount = 0;
+        fishCount = 0;
+    }
+
+    public void AddCat(Animal cat)
+    {
+        if (catCount < Cats.Length)
+        {
+            Cats[catCount++] = cat;
+        }
+        else
+        {
+            Console.WriteLine("Pisik array doludur");
+        }
+    }
+
+    public void AddDog(Animal dog)
+    {
+        if (dogCount < Dogs.Length)
+        {
+            Dogs[dogCount++] = dog;
+        }
+        else
+        {
+            Console.WriteLine("Dog array doludur");
+        }
+    }
+
+    public void AddBird(Animal bird)
+    {
+        if (birdCount < Birds.Length)
+        {
+            Birds[birdCount++] = bird;
+        }
+        else
+        {
+            Console.WriteLine("Bird array doludur");
+        }
+    }
+
+    public void AddFish(Animal fish)
+    {
+        if (fishCount < Fishes.Length)
+        {
+            Fishes[fishCount++] = fish;
+        }
+        else
+        {
+            Console.WriteLine("Fish array doludur");
+        }
+    }
+
+    public void RemoveByName(string name)
+    {
+        ArrayRemoveAnimal(Cats, ref catCount, name);
+        ArrayRemoveAnimal(Dogs, ref dogCount, name);
+        ArrayRemoveAnimal(Birds, ref birdCount, name);
+        ArrayRemoveAnimal(Fishes, ref fishCount, name);
+    }
+
+    private void ArrayRemoveAnimal(Animal[] animals, ref int count, string name)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (animals[i].Name == name)
+            {
+                for (int j = i; j < count - 1; j++)
+                {
+                    animals[j] = animals[j + 1];
+                }
+                count--;
+                break;
+            }
+        }
+    }
+
+    public double PriceCalc()
+    {
+        double totalPrice = 0;
+        for (int i = 0; i < catCount; i++)
+        {
+            totalPrice += Cats[i].Price;
+        }
+        for (int i = 0; i < dogCount; i++)
+        {
+            totalPrice += Dogs[i].Price;
+        }
+        for (int i = 0; i < birdCount; i++)
+        {
+            totalPrice += Birds[i].Price;
+        }
+        for (int i = 0; i < fishCount; i++)
+        {
+            totalPrice += Fishes[i].Price;
+        }
+        return totalPrice;
+    }
+
+    public int TotalMealCalc()
+    {
+        int totalMealCount = 0;
+        for (int i = 0; i < catCount; i++)
+        {
+            totalMealCount += Cats[i].MealCount;
+        }
+        for (int i = 0; i < dogCount; i++)
+        {
+            totalMealCount += Dogs[i].MealCount;
+        }
+        for (int i = 0; i < birdCount; i++)
+        {
+            totalMealCount += Birds[i].MealCount;
+        }
+        for (int i = 0; i < fishCount; i++)
+        {
+            totalMealCount += Fishes[i].MealCount;
+        }
+        return totalMealCount;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        PetShop petShop = new PetShop(100);
+
+        petShop.AddCat(new Animal("Mestan", 4, "Disi", 60));
+        petShop.AddDog(new Animal("Kopke", 2, "Erkek", 80));
+        petShop.AddBird(new Animal("Bayqus", 1, "Erkek", 30));
+        petShop.AddFish(new Animal("Yeti", 1, "Disi", 15));
+
+        for (int i = 0; i < petShop.Cats.Length; i++)
+        {
+            Animal cat = petShop.Cats[i];
+            Animal dog = petShop.Dogs[i];
+            if (dog != null)
+            {
+                dog.Play();
+                dog.Eat();
+            }
+            if (cat != null)
+            {
+                cat.Eat();
+                cat.Play();
+                cat.Sleep();
+            }
+        }
+
+
+        int totalMealCount = petShop.TotalMealCalc();
+        double totalPrice = petShop.PriceCalc();
+
+        Console.WriteLine($"Yedikleri yemek miqdari: {totalMealCount}");
+        Console.WriteLine($"Butun animal qiymet: {totalPrice} manat");
+    }
+}
